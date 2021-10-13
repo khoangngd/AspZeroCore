@@ -1,0 +1,24 @@
+BackEnd:
+set run Web.Host
+
+chỉnh cho 3 file appsettings.json (Host,Mvc,Public)
+"Server=.\\SQLEXPRESS; Database=demoDb; Trusted_Connection=True;"
+
+*.Core.Shared => MultiTenancyEnabled = false;
+
+update-database
+
+
+FrontEnd:
+Save as type UTF8 (no BOM) file
+angular.json 
+package.json
+bundles.json
+tsconfig.json (optional)
+tslint.json (optional)
+typings.json (optional)
+.prettierrc.json (optional)
+
+yarn
+npm run create-dynamic-bundles
+npm start
