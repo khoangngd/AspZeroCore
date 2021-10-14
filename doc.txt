@@ -1,5 +1,7 @@
+đến Power_Tools_2.7.8 bị lỗi, dùng dc 2.1 và 2.5
+
 BackEnd:
-set run Web.Host
+set startup Web.Host
 
 chỉnh cho 3 file appsettings.json (Host,Mvc,Public)
 "Server=.\\SQLEXPRESS; Database=demoDb; Trusted_Connection=True;"
@@ -22,3 +24,128 @@ typings.json (optional)
 yarn
 npm run create-dynamic-bundles
 npm start
+
+(
+npm install moment@2.24.0
+yarn add rxjs-operators
+import { LazyLoadEvent } from 'primeng/api';
+)
+ng serve
+
++ Defining a Menu Item: src\app\shared\layout\nav\app-navigation.service.ts 
+new AppMenuItem("PhoneBook", null, "flaticon-book", "/app/main/phonebook")
+
++ Localize Menu Item Display Name: Core\Localization\demo\
+<text name="PhoneBook">Phone Book</text>
+
++ Angular Route: rc\app\main\main-routing.module.ts 
+{
+	path: 'phonebook',
+	loadChildren: () => import('./phonebook/phonebook.module').then(m => m.PhonebookModule)
+}
+
++ Creating the PhoneBook Component
+Create a phonebook folder inside src/app/main 
+Add a new typescript file (phonebook.component.ts)
+import { Component, Injector } from '@angular/core';
+import { AppComponentBase } from '@shared/common/app-component-base';
+import { appModuleAnimation } from '@shared/animations/routerTransition';
+
+@Component({
+    templateUrl: './phonebook.component.html',
+    animations: [appModuleAnimation()]
+})
+
+export class PhoneBookComponent extends AppComponentBase {
+    constructor(
+        injector: Injector
+    ) {
+        super(injector);
+    }
+}
+
+Create a phonebook.component.html view in the same phonebook folder
+<div [@routerTransition]>
+    <div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+        <div class="kt-subheader kt-grid__item">
+            <div [class]="containerClass">
+                <div class="kt-subheader__main">
+                    <h3 class="kt-subheader__title">
+                        <span>{{"PhoneBook" | localize}}</span>
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <div [class]="containerClass + ' kt-grid__item kt-grid__item--fluid'">
+            <div class="kt-portlet kt-portlet--mobile">
+                <div class="kt-portlet__body  kt-portlet__body--fit">
+                    <p>PHONE BOOK CONTENT COMES HERE!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+Create a phonebook.module.ts view in the same phonebook folder
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {PhoneBookComponent} from './phonebook.component';
+
+const routes: Routes = [{
+    path: '',
+    component: PhoneBookComponent,
+    pathMatch: 'full'
+}];
+
+@NgModule({
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule],
+})
+export class PhoneBookRoutingModule {}
+
+Create a phonebook-routing.module.ts view in the same phonebook folder
+import {NgModule} from '@angular/core';
+import {AppSharedModule} from '@app/shared/app-shared.module';
+import {PhoneBookRoutingModule} from './phonebook-routing.module';
+import {PhoneBookComponent} from './phonebook.component';
+
+@NgModule({
+    declarations: [PhoneBookComponent],
+    imports: [AppSharedModule, PhoneBookRoutingModule]
+})
+export class PhoneBookModule {}
+
+Creating Person Entity (tls.demo.Domain.Persons)
+public virtual DbSet<Person> Persons { get; set; }
+
+Database Migrations for Person (tls.demo.EntityFrameworkCore)
+Add-Migration "Added_Persons_Table"
+Update-Database
+
+InitialPeopleCreator (tls.demo.Migrations.Seed.Host)
+
+InitialHostDbBuilder (tls.demo.Migrations.Seed.Host)
+new InitialPeopleCreator(_context).Create();
+
+Creating Person Application Service:
+tls.demo.Application: chứa Service, Interface, CustomDtoMapper.cs
+tls.demo.Application.Shared: chứa Dto
+
++ Web.Host project. Then run nswag/refresh.bat 
+we added a new service, we should add it to src/shared/service-proxies/service-proxy.module.ts. Just open it and add ApiServiceProxies.PersonServiceProxy 
+re-run npm start
+
++ Authorization For Phone Book
+Define the permission:
+AppAuthorizationProvider 
+AppPermissions
+
+
+Guard Angular Route: main-routing.module.ts
+{
+	path: 'phonebook',
+	loadChildren: () => import('./phonebook/phonebook.module').then(m => m.PhonebookModule),
+	data: { permission: 'Pages.Tenant.PhoneBook' }
+}
+Hide Unauthorized Menu Item: app-navigation-service.ts
+new AppMenuItem("PhoneBook", 'Pages.Tenant.PhoneBook', "flaticon-book", "/app/main/phonebook")
