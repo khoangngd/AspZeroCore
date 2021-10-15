@@ -23,14 +23,13 @@ typings.json (optional)
 
 yarn
 npm run create-dynamic-bundles
-npm start
+npm start / ng serve
 
 (
-npm install moment@2.24.0
+npm install moment --save
+import { LazyLoadEvent } from 'primeng/api'; remove publicapi -> api
 yarn add rxjs-operators
-import { LazyLoadEvent } from 'primeng/api';
 )
-ng serve
 
 + Defining a Menu Item: src\app\shared\layout\nav\app-navigation.service.ts 
 new AppMenuItem("PhoneBook", null, "flaticon-book", "/app/main/phonebook")
